@@ -17,21 +17,20 @@ class StackedCards extends HTMLElement {
     }
   }
 
-  static getConfigElement() {
-    return document.createElement("stacked-cards-editor");
-  }
+  // No custom editor, Home Assistant will use the standard YAML editor
 
   static getStubConfig() {
     return {
       cards: [
         {
-          show_name: true,
-          show_state: true,
-          type: "button",
-          tap_action: {
-            action: "toggle",
-          },
-          entity: "light.kitchen",
+          type: "custom:mini-graph-card",
+          entity: "sensor.temperature",
+          name: "Temperature",
+        },
+        {
+          type: "entities",
+          title: "Living Room",
+          entities: ["light.living_room", "switch.tv"],
         },
         {
           type: "thermostat",
@@ -291,121 +290,8 @@ class StackedCards extends HTMLElement {
 
 customElements.define("stacked-cards", StackedCards);
 
-// Configuration editor
-class StackedCardsEditor extends HTMLElement {
-  setConfig(config) {
-    this.config = config;
-    this.render();
-  }
-
-  render() {
-    this.innerHTML = `
-      <style>
-        .editor {
-          padding: 16px;
-        }
-        .card-config {
-          margin-bottom: 24px;
-          padding: 16px;
-          border: 1px solid var(--divider-color);
-          border-radius: 8px;
-        }
-        textarea {
-          width: 100%;
-          min-height: 120px;
-          font-family: monospace;
-          padding: 8px;
-          margin: 8px 0;
-          resize: vertical;
-        }
-        .error {
-          color: var(--error-color);
-          margin-top: 8px;
-        }
-      </style>
-      <div class="editor">
-        <h3>Stacked Cards Configuration</h3>
-        <div class="cards-config">
-          ${this.config.cards
-            .map(
-              (card, index) => `
-            <div class="card-config">
-              <h4>Card ${index + 1}</h4>
-              <textarea
-                id="card-${index}"
-                .value='${JSON.stringify(card, null, 2)}'
-              ></textarea>
-              <mwc-button @click="${() => this.deleteCard(index)}">
-                Delete Card
-              </mwc-button>
-            </div>
-          `
-            )
-            .join("")}
-        </div>
-        <mwc-button @click="${this.addCard}">
-          Add Card
-        </mwc-button>
-      </div>
-    `;
-
-    // Add event listeners after rendering
-    this.querySelectorAll("textarea").forEach((textarea, index) => {
-      textarea.addEventListener("change", (e) =>
-        this.updateCard(index, e.target.value)
-      );
-    });
-  }
-
-  updateCard(index, value) {
-    try {
-      const cardConfig = JSON.parse(value);
-      this.config.cards[index] = cardConfig;
-      this.fireEvent();
-
-      // Remove any existing error message
-      const errorEl = this.querySelector(`#card-${index}-error`);
-      if (errorEl) errorEl.remove();
-    } catch (e) {
-      // Show error message
-      const textarea = this.querySelector(`#card-${index}`);
-      let errorEl = this.querySelector(`#card-${index}-error`);
-      if (!errorEl) {
-        errorEl = document.createElement("div");
-        errorEl.id = `card-${index}-error`;
-        errorEl.className = "error";
-        textarea.parentNode.insertBefore(errorEl, textarea.nextSibling);
-      }
-      errorEl.textContent = `Invalid card configuration: ${e.message}`;
-    }
-  }
-
-  deleteCard(index) {
-    this.config.cards.splice(index, 1);
-    this.fireEvent();
-    this.render();
-  }
-
-  addCard() {
-    if (!this.config.cards) this.config.cards = [];
-    this.config.cards.push({
-      type: "button",
-      entity: "light.example",
-    });
-    this.fireEvent();
-    this.render();
-  }
-
-  fireEvent() {
-    this.dispatchEvent(
-      new CustomEvent("config-changed", {
-        detail: { config: this.config },
-      })
-    );
-  }
-}
-
-customElements.define("stacked-cards-editor", StackedCardsEditor);
+// Use the standard Home Assistant YAML editor
+// We don't need to define a custom editor
 
 // Register the card
 window.customCards = window.customCards || [];
