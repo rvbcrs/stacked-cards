@@ -1,0 +1,7 @@
+{
+  "name": "Stacked Cards",
+  "content_in_root": false,
+  "filename": "stacked-cards.js",
+  "render_readme": true,
+  "homeassistant": "2023.8.0"
+}

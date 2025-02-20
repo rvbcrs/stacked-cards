@@ -1,0 +1,31 @@
+{
+  "name": "stacked-cards",
+  "version": "1.0.0",
+  "description": "Stacked Cards for Home Assistant - a card stack with 3D transition effects",
+  "main": "dist/stacked-cards.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "update-card-tools": "npm uninstall card-tools && npm install thomasloven/lovelace-card-tools"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/stacked-cards.git"
+  },
+  "keywords": [
+    "home-assistant",
+    "homeassistant",
+    "hass",
+    "lovelace",
+    "custom-cards"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  }
+}
