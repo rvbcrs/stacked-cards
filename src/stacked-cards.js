@@ -1,4 +1,6 @@
-// stacked-cards.js
+// Create navigation controls
+const controls = document.createElement("div");
+controls.className = "controls"; // stacked-cards.js
 class StackedCards extends HTMLElement {
   constructor() {
     super();
@@ -89,106 +91,112 @@ class StackedCards extends HTMLElement {
 
     const style = document.createElement("style");
     style.textContent = `
-      :host {
-        display: block;
-        position: relative;
-        width: 100%;
-        height: 400px;
-        padding: 16px;
-      }
+  :host {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 400px;
+    padding: 16px;
+    box-sizing: border-box;
+  }
 
-      .card-stack {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        perspective: 1200px;
-      }
+  .card-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-      .card-wrapper {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        transform-style: preserve-3d;
-        cursor: pointer;
-      }
+  .card-wrapper {
+    position: absolute;
+    width: 90%;
+    max-width: 500px;
+    height: 100%;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
 
-      .card-wrapper > * {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        background: var(--card-background-color, var(--ha-card-background, white));
-        box-shadow: var(--ha-card-box-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2));
-      }
+  .card-wrapper > * {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card-background-color, var(--ha-card-background, white));
+    box-shadow: var(--ha-card-box-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2));
+  }
 
-      .error-card {
-        padding: 16px;
-        color: var(--error-color);
-      }
+  .error-card {
+    padding: 16px;
+    color: var(--error-color);
+  }
 
-      .controls {
-        position: absolute;
-        bottom: -40px;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 24px;
-      }
+  .controls {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+  }
 
-      .nav-dots {
-        display: flex;
-        gap: 8px;
-      }
+  .nav-dots {
+    display: flex;
+    gap: 8px;
+  }
 
-      .nav-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        opacity: 0.5;
-        cursor: pointer;
-        transition: opacity 0.3s;
-      }
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
 
-      .nav-dot.active {
-        opacity: 1;
-      }
+  .nav-dot.active {
+    opacity: 1;
+  }
 
-      .nav-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: var(--primary-color);
-        color: var(--primary-text-color);
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-        opacity: 0.8;
-        transition: opacity 0.3s;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-      .nav-button:hover {
-        opacity: 1;
-      }
+  .nav-button:hover {
+    opacity: 1;
+  }
 
-      .nav-button.prev {
-        left: -16px;
-      }
+  .nav-button.prev {
+    left: 5px;
+  }
 
-      .nav-button.next {
-        right: -16px;
-      }
-    `;
+  .nav-button.next {
+    right: 5px;
+  }
+`;
 
     const stack = document.createElement("div");
     stack.className = "card-stack";
@@ -204,9 +212,38 @@ class StackedCards extends HTMLElement {
       stack.appendChild(element);
     });
 
-    // Create navigation controls
-    const controls = document.createElement("div");
-    controls.className = "controls";
+    // Add touch swipe functionality
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    stack.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      },
+      { passive: true }
+    );
+
+    stack.addEventListener(
+      "touchend",
+      (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      },
+      { passive: true }
+    );
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50; // Minimum distance for a swipe
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe left, go to next card
+        this.nextCard();
+      }
+      if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe right, go to previous card
+        this.previousCard();
+      }
+    };
 
     const prevButton = document.createElement("button");
     prevButton.className = "nav-button prev";
