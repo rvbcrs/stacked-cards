@@ -96,7 +96,6 @@ class StackedCards extends HTMLElement {
     position: relative;
     width: 100%;
     height: 400px;
-    padding: 16px;
     box-sizing: border-box;
   }
 
@@ -105,15 +104,11 @@ class StackedCards extends HTMLElement {
     width: 100%;
     height: 100%;
     perspective: 1200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .card-wrapper {
     position: absolute;
-    width: 90%;
-    max-width: 500px;
+    width: 100%;
     height: 100%;
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
@@ -190,11 +185,11 @@ class StackedCards extends HTMLElement {
   }
 
   .nav-button.prev {
-    left: 5px;
+    left: -16px;
   }
 
   .nav-button.next {
-    right: 5px;
+    right: -16px;
   }
 `;
 
