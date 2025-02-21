@@ -1,6 +1,8 @@
 // Create navigation controls
 const controls = document.createElement("div");
 controls.className = "controls"; // stacked-cards.js
+
+console.log("Stacked Cards Card is being loaded...");
 class StackedCards extends HTMLElement {
   constructor() {
     super();
@@ -165,31 +167,32 @@ class StackedCards extends HTMLElement {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: var(--primary-color);
-    color: var(--primary-text-color);
+    background: red; /* Duidelijk zichtbare kleur */
+    color: white;
     border: none;
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 40px; /* Groter */
+    height: 40px; /* Groter */
     cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.3s;
+    opacity: 1; /* Volledig zichtbaar */
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
   }
 
   .nav-button:hover {
-    opacity: 1;
+    background: darkred;
   }
 
   .nav-button.prev {
-    left: -16px;
+    left: -20px; /* Verder naar buiten */
   }
 
   .nav-button.next {
-    right: -16px;
+    right: -20px; /* Verder naar buiten */
   }
 `;
 
@@ -332,3 +335,8 @@ window.customCards.push({
   name: "Stacked Cards",
   description: "A card stack with 3D transition effects",
 });
+console.info(
+  "%c STACKED-CARDS %c 2024.05.05.0",
+  "Color: white; font-weight: bold; background: blue;",
+  ""
+);
