@@ -1,8 +1,6 @@
 // Create navigation controls
 const controls = document.createElement("div");
 controls.className = "controls"; // stacked-cards.js
-
-console.log("Stacked Cards Card is being loaded...");
 class StackedCards extends HTMLElement {
   constructor() {
     super();
@@ -167,32 +165,40 @@ class StackedCards extends HTMLElement {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: red; /* Duidelijk zichtbare kleur */
-    color: white;
+    background: var(--primary-color, #03a9f4);
+    color: var(--text-primary-color, white);
     border: none;
     border-radius: 50%;
-    width: 40px; /* Groter */
-    height: 40px; /* Groter */
+    width: 40px;
+    height: 40px;
     cursor: pointer;
-    opacity: 1; /* Volledig zichtbaar */
+    opacity: 0.9;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
   }
 
   .nav-button:hover {
-    background: darkred;
+    opacity: 1;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .nav-button svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
   }
 
   .nav-button.prev {
-    left: -20px; /* Verder naar buiten */
+    left: -20px;
   }
 
   .nav-button.next {
-    right: -20px; /* Verder naar buiten */
+    right: -20px;
   }
 `;
 
@@ -245,7 +251,11 @@ class StackedCards extends HTMLElement {
 
     const prevButton = document.createElement("button");
     prevButton.className = "nav-button prev";
-    prevButton.innerHTML = "&lt;";
+    prevButton.innerHTML = `
+  <svg viewBox="0 0 24 24">
+    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+  </svg>
+`;
     prevButton.addEventListener("click", (e) => {
       e.stopPropagation();
       this.previousCard();
@@ -253,7 +263,11 @@ class StackedCards extends HTMLElement {
 
     const nextButton = document.createElement("button");
     nextButton.className = "nav-button next";
-    nextButton.innerHTML = "&gt;";
+    nextButton.innerHTML = `
+  <svg viewBox="0 0 24 24">
+    <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+  </svg>
+`;
     nextButton.addEventListener("click", (e) => {
       e.stopPropagation();
       this.nextCard();
@@ -335,8 +349,3 @@ window.customCards.push({
   name: "Stacked Cards",
   description: "A card stack with 3D transition effects",
 });
-console.info(
-  "%c STACKED-CARDS %c 2024.05.05.0",
-  "Color: white; font-weight: bold; background: blue;",
-  ""
-);
